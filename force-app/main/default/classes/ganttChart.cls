@@ -101,10 +101,10 @@ public with sharing class ganttChart {
 
                 List<Object> projectAllocation = (List<Object>)allocationsByProject.get(allocation.Project__c);
 
-                Decimal left = Decimal.valueOf(startDate.daysBetween(allocation.Start_Date__c)) / slotSize;
+                Decimal left = Decimal.valueOf(startDate.daysBetween(allocation.Start_Date__c.addDays(-1))) / slotSize;
                 left = left.round(System.RoundingMode.FLOOR);
                 
-                Decimal right = Decimal.valueOf(startDate.daysBetween(allocation.End_Date__c)) / slotSize;
+                Decimal left = Decimal.valueOf(startDate.daysBetween(allocation.Start_Date__c.addDays(-1))) / slotSize;
                 right = right.round(System.RoundingMode.FLOOR);
 
                 projectAllocation.add(new Map<String, Object> {
@@ -159,8 +159,8 @@ public with sharing class ganttChart {
     @AuraEnabled
     public static void saveAllocation(Id allocationId, Id projectId, Id resourceId, String effort, String status, String startDate, String endDate) {
         Allocation__c allocation = new Allocation__c(
-            Start_Date__c = DateTime.newInstance(Long.valueOf(startDate)).date(),
-            End_Date__c = DateTime.newInstance(Long.valueOf(endDate)).date()
+            Start_Date__c = DateTime.newInstance(Long.valueOf(startDate)).date().addDays(1),
+            End_Date__c = DateTime.newInstance(Long.valueOf(endDate)).date().addDays(1)
         );
 
         // update allocation
